@@ -84,8 +84,7 @@
                 <t2b.java.exec>"${t2b.java.home}/bin/java"</t2b.java.exec>
                 <!-- ### Java system properties used by T2B ###-->
                 <t2b.sys.props>
-                    -Dt2b.aop.cfg.path="${project.basedir}"/config/t2b.properties
-                    -Dt2b.metadata.cfg.path="${project.basedir}"/config/metadata.properties
+                    -Dt2b.aop.cfg.path="${project.basedir}"/config/t2b.properties -Dt2b.metadata.cfg.path="${project.basedir}"/config/metadata.properties
                     <!-- ### To use custom LOG4J configuration -->
                     <!-- -Dlog4j2.configurationFile=file:"${project.basedir}"/t2b/log4j2.xml-->
                 </t2b.sys.props>
