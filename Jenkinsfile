@@ -10,7 +10,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing again2933'
-				bat 'mvn clean install'
+				bat 'mvn clean verify -P test-2-bench'
             }
         }
         stage('Deploy') {
