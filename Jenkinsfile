@@ -7,10 +7,9 @@ pipeline {
                 echo 'Building..'
             }
         }
-        stage('Test') {
+        stage('Benchmark') {
             steps {
-                echo 'Testing again2933'
-				bat 'mvn clean verify -P test-2-bench'
+                bat 'mvn clean verify -P test-2-bench'
             }
         }
         stage('Deploy') {

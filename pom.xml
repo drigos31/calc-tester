@@ -9,7 +9,6 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<!-- ### Java 9+ OPTIONS ### -->
 		<t2b.module.prop></t2b.module.prop>
 		<!-- ### Config for JUnit5 launcher - default one, and it is also capable 
 			to run JUnit4 tests ### -->
@@ -18,7 +17,6 @@
 			--scan-class-path -E=junit-jupiter
 		</t2b.test.runner.class.args>
 	</properties>
-
 	<profiles>
 		<profile>
 			<id>java9-plus</id>
@@ -79,7 +77,7 @@
 				<t2b.java.exec>"${t2b.java.home}/bin/java"</t2b.java.exec>
 				<!-- ### Java system properties used by T2B ### -->
 				<t2b.sys.props>
-					-Dt2b.aop.cfg.path="${project.basedir}"/t2b/t2b.properties -Dt2b.metadata.cfg.path="${project.basedir}"/t2b/metadata.properties
+					-Dt2b.aop.cfg.path="${project.basedir}"/config/t2b.properties -Dt2b.metadata.cfg.path="${project.basedir}"/config/metadata.properties
 					<!-- ### To use custom LOG4J configuration -->
 					<!-- -Dlog4j2.configurationFile=file:"${project.basedir}"/t2b/log4j2.xml -->
 				</t2b.sys.props>
@@ -144,8 +142,6 @@
 			</build>
 		</profile>
 	</profiles>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
