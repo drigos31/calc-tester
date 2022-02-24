@@ -77,7 +77,7 @@
                     <version>1.8.1</version>
                     <scope>test</scope>
                 </dependency>
-            </dependencies>+
+            </dependencies>
             <properties>
                 <!-- ### Java executable to use ### -->
                 <t2b.java.home>${java.home}</t2b.java.home>
