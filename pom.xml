@@ -9,139 +9,15 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<t2b.module.prop></t2b.module.prop>
-		<!-- ### Config for JUnit5 launcher - default one, and it is also capable 
-			to run JUnit4 tests ### -->
-		<t2b.test.runner.class>org.junit.platform.console.ConsoleLauncher</t2b.test.runner.class>
-		<t2b.test.runner.class.args>
+		<!-- ### Java 9+ OPTIONS ### -->
+        <t2b.module.prop></t2b.module.prop> 
+        <!-- ### Config for JUnit5 launcher - default one, and it is also capable to run JUnit4 tests ### -->
+        <t2b.test.runner.class>org.junit.platform.console.ConsoleLauncher</t2b.test.runner.class>
+        <t2b.test.runner.class.args>
 			--scan-class-path -E=junit-jupiter
-		</t2b.test.runner.class.args>
+        </t2b.test.runner.class.args>
 	</properties>
-	<profiles>
-		<profile>
-			<id>java9-plus</id>
-			<activation>
-				<jdk>[9.0,)</jdk>
-			</activation>
-			<properties>
-				<!-- ### Java 9+ OPTIONS ### -->
-				<t2b.module.prop>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
-				</t2b.module.prop>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>run-junit4</id>
-			<properties>
-				<!-- ### Config for JUnit4 launcher ### -->
-				<t2b.test.runner.class>org.junit.runner.JUnitCore</t2b.test.runner.class>
-				<t2b.test.runner.class.args>
-					--scan-class-path -E=junit-jupiter
-				</t2b.test.runner.class.args>
-			</properties>
-		</profile>
-		<profile>
-			<id>test-2-bench</id>
-			<!-- @@@ Maven central snapshots repository to get dependency artifacts 
-				snapshot releases @@@ -->
-			<repositories>
-				<repository>
-					<id>oss.sonatype.org</id>
-					<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-			</repositories>
-			<dependencies>
-				<!-- @@@ T2B agent app dependency @@@ -->
-				<dependency>
-					<groupId>com.gocypher.cybench</groupId>
-					<artifactId>cybench-t2b-agent</artifactId>
-					<version>1.0.9-SNAPSHOT</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-console-standalone</artifactId>
-					<version>1.8.1</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-			<properties>
-				<!-- ### Java executable to use ### -->
-				<t2b.java.home>${java.home}</t2b.java.home>
-				<t2b.java.exec>"${t2b.java.home}/bin/java"</t2b.java.exec>
-				<!-- ### Java system properties used by T2B ### -->
-				<t2b.sys.props>
-					-Dt2b.aop.cfg.path="${project.basedir}"/config/t2b.properties -Dt2b.metadata.cfg.path="${project.basedir}"/config/metadata.properties
-					<!-- ### To use custom LOG4J configuration -->
-					<!-- -Dlog4j2.configurationFile=file:"${project.basedir}"/t2b/log4j2.xml -->
-				</t2b.sys.props>
-				<!-- ### Class path used to run tests: libs;classes;test-classes -->
-				<t2b.run.class.path>
-					${t2b.compile.classpath}${path.separator}${project.build.outputDirectory}${path.separator}${project.build.testOutputDirectory}
-				</t2b.run.class.path>
-				<!-- ### Skip running unit tests as benchmarks ### -->
-				<t2b.bench.runner.skip>false</t2b.bench.runner.skip>
-			</properties>
-			<build>
-				<plugins>
-					<!-- @@@ Make classpath entries as properties to ease access @@@ -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.1.2</version>
-						<executions>
-							<execution>
-								<id>get-classpath-filenames</id>
-								<goals>
-									<goal>properties</goal>
-								</goals>
-							</execution>
-							<execution>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>build-classpath</goal>
-								</goals>
-								<configuration>
-									<outputProperty>t2b.compile.classpath</outputProperty>
-									<pathSeparator>${path.separator}</pathSeparator>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>3.0.0</version>
-						<executions>
-							<!-- @@@ Run unit tests as benchmarks @@@ -->
-							<execution>
-								<id>run-benchmarks</id>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<!-- ### Maven phase when to run unit tests as benchmarks ### -->
-								<phase>integration-test</phase>
-								<configuration>
-									<skip>${t2b.bench.runner.skip}</skip>
-									<executable>${t2b.java.exec}</executable>
-									<classpathScope>test</classpathScope>
-									<commandlineArgs>
-										${t2b.module.prop} -javaagent:${com.gocypher.cybench:cybench-t2b-agent:jar} ${t2b.sys.props} -cp ${t2b.run.class.path} ${t2b.test.runner.class} ${t2b.test.runner.class.args}
-									</commandlineArgs>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -150,4 +26,128 @@
 		</dependency>
 	</dependencies>
 
+ <profiles>
+        <profile>
+            <id>java9-plus</id>
+            <activation>
+                <jdk>[9.0,)</jdk>
+            </activation>
+            <properties>
+                <!-- ### Java 9+ OPTIONS ### -->
+                <t2b.module.prop>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
+                </t2b.module.prop>
+            </properties>
+        </profile>
+                <profile>
+            <id>run-junit4</id>
+            <properties>
+                <!-- ### Config for JUnit4 launcher ### -->
+                <t2b.test.runner.class>org.junit.runner.JUnitCore</t2b.test.runner.class>
+                <t2b.test.runner.class.args>
+                 --scan-class-path -E=junit-jupiter
+                </t2b.test.runner.class.args>
+            </properties>
+        </profile>
+              <profile>
+            <id>test-2-bench</id>
+            <!-- @@@ Maven central snapshots repository to get dependency artifacts snapshot releases @@@ -->
+            <repositories>
+                <repository>
+                    <id>oss.sonatype.org</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <dependencies>
+                <!-- @@@ T2B agent app dependency @@@ -->
+                <dependency>
+                    <groupId>com.gocypher.cybench</groupId>
+                    <artifactId>cybench-t2b-agent</artifactId>
+                    <version>1.0.8-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-console-standalone</artifactId>
+                    <version>1.8.1</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>+
+            <properties>
+                <!-- ### Java executable to use ### -->
+                <t2b.java.home>${java.home}</t2b.java.home>
+                <t2b.java.exec>"${t2b.java.home}/bin/java"</t2b.java.exec>
+                <!-- ### Java system properties used by T2B ###-->
+                <t2b.sys.props>
+                    -Dt2b.aop.cfg.path="${project.basedir}"/config/t2b.properties
+                    -Dt2b.metadata.cfg.path="${project.basedir}"/config/metadata.properties
+                    <!-- ### To use custom LOG4J configuration -->
+                    <!-- -Dlog4j2.configurationFile=file:"${project.basedir}"/t2b/log4j2.xml-->
+                </t2b.sys.props>
+                <!--  ### Class path used to run tests: libs;classes;test-classes -->
+                <t2b.run.class.path>
+                    ${t2b.compile.classpath}${path.separator}${project.build.outputDirectory}${path.separator}${project.build.testOutputDirectory}
+                </t2b.run.class.path>
+                <!-- ### Skip running unit tests as benchmarks ### -->
+                <t2b.bench.runner.skip>false</t2b.bench.runner.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- @@@ Make classpath entries as properties to ease access @@@ -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>get-classpath-filenames</id>
+                                <goals>
+                                    <goal>properties</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>build-classpath</goal>
+                                </goals>
+                                <configuration>
+                                    <outputProperty>t2b.compile.classpath</outputProperty>
+                                    <pathSeparator>${path.separator}</pathSeparator>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <!-- @@@ Run unit tests as benchmarks @@@ -->
+                            <execution>
+                                <id>run-benchmarks</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <!-- ### Maven phase when to run unit tests as benchmarks ### -->
+                                <phase>integration-test</phase>
+                                <configuration>
+                                    <skip>${t2b.bench.runner.skip}</skip>
+                                    <executable>${t2b.java.exec}</executable>
+                                    <classpathScope>test</classpathScope>
+                                    <commandlineArgs>
+                                        ${t2b.module.prop} -javaagent:${com.gocypher.cybench:cybench-t2b-agent:jar} ${t2b.sys.props} -cp ${t2b.run.class.path} ${t2b.test.runner.class} ${t2b.test.runner.class.args}
+                                    </commandlineArgs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
