@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Benchmark') {
             steps {
-                bat 'mvn clean verify -U -P test-2-bench'
+                bat 'mvn clean verify -P test-2-bench'
             }
         }
         stage('Deploy') {
